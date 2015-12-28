@@ -6,7 +6,8 @@ if (typeof define !== 'function') { var define = require('amdefine')(module) }
 define(function (require, exports, module) {
 
   var http = require('http'),
-      Socket = require('socket.io');
+      Socket = require('socket.io'),
+      Datastore = require('nedb');
 
   /**
    * Expose Mire
@@ -26,6 +27,25 @@ define(function (require, exports, module) {
     this.connectedSockets = {};
     this.clients = {};
     this.io = {};
+    this.config_db = {
+      dbo: {},
+      numConnections: 0
+    };
+  }
+
+  Mire.prototype.initConfigDB = function (db) {
+    // Initialize the DB.
+    db.dbo = new Datastore({ filename: '../db/config.db', autoload: true });
+
+    // Check to see if numConnections exists:
+    db.dbo.findOne({ variable: 'numConnections' }, function (err, data) {
+      if (Object.size(data) == 0) {
+        // We should initialize this value.
+        db.dbo.insert({variable: 'numConnections', value: 0});
+      } else {
+        db.numConnections = data.value;
+      }
+    });
   }
 
   Mire.prototype.getMOTD = function () {
@@ -33,8 +53,20 @@ define(function (require, exports, module) {
   };
 
   Mire.prototype.startServer = function () {
+    // Let's setup some polyfills
+    Object.size = function(obj) {
+        var size = 0, key;
+        for (key in obj) {
+            if (obj.hasOwnProperty(key)) size++;
+        }
+        return size;
+    };
+
     // Setup the callback for the server listen.
     this.events.addEventListener('config_read', this.listen, this);
+
+    // Let's initialize the config DBO.
+    this.initConfigDB(this.config_db);
 
     // Setup the http server.
     var resHandler = (function (req, res) {
@@ -60,7 +92,11 @@ define(function (require, exports, module) {
     this.io.on('connection', (function (socket) {
       this.connectedSockets[socket.id] = socket;
       this.clients[socket.id] = {"username": "", loggedIn: false};
-      console.log("User Connected.");
+
+      this.config_db.numConnections++;
+      this.config_db.dbo.update({variable: 'numConnections'}, {$set: {value: this.config_db.numConnections}}, {});
+
+      console.log("User Connected. [Connection #" + this.config_db.numConnections + "]");
 
       socket.on('disconnect', (function (data) {
         console.log("User Disconnected.");
