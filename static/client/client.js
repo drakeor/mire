@@ -38,9 +38,14 @@ define(function(require, exports, module) {
   });
 
   $(function() {
-    socket.emit('connect', {});
+    // Connect to the server
+	socket.emit('connect', {});
+	
+	// Login to the server
 	var person = prompt("[TEMPORARY] Please enter your username", "Guest" + Math.floor((Math.random() * 10) + 1));
 	socket.emit('login', {user:person});
+	
+	// Register a function to handle the chat
 	$('form').submit(function(){
 		var temp_data = {};
 		temp_data.user = person;
@@ -49,7 +54,6 @@ define(function(require, exports, module) {
 		$('#m').val('');
 		return false;
 	  });
-    console.log("Test!");
 
   });
 
