@@ -8,7 +8,8 @@ define(function(require, exports, module) {
 
   var $ = require('./jquery'),
       io = require('socket.io'),
-      StateMachine = require('/shared/machine.js');
+      StateMachine = require('/shared/machine.js'),
+      Whirlpool = require('/shared/whirlpool.js');
 
   var chatPanel = {};
 
@@ -44,6 +45,8 @@ define(function(require, exports, module) {
   $(function() {
     // Connect to the server
 	socket.emit('connect', {});
+  
+  console.log(Whirlpool.init().add("asdf").finalize());
 
 	// Login to the server
 	var person = prompt("[TEMPORARY] Please enter your username", "Guest" + Math.floor((Math.random() * 10) + 1));

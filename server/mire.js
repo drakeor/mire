@@ -8,7 +8,8 @@ define(function (require, exports, module) {
   var http = require('http'),
       Socket = require('socket.io'),
       DBService = require('./mire/services/dbservice.js'),
-      DBO = require('./mire/dbo.js');
+      DBO = require('./mire/dbo.js'),
+      Whirlpool = require('../shared/whirlpool.js');
 
   /**
    * Expose Mire
@@ -45,6 +46,9 @@ define(function (require, exports, module) {
         }
         return size;
     };
+
+
+    console.log(Whirlpool.init().add("asdf").finalize());
 
     // Setup the callback for the server listen.
     this.events.addEventListener('config_read', this.listen, this);
