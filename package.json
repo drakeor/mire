@@ -1,0 +1,31 @@
+{
+  "name": "Mire",
+  "version": "0.0.0",
+  "description": "## Format",
+  "main": "mire.js",
+  "directories": {
+    "example": "examples",
+    "test": "test"
+  },
+  "dependencies": {
+    "chai": "~3.2.0",
+    "prompt": "~0.2.14",
+    "replacestream": "~4.0.0",
+    "requirejs": ">=0.0.0",
+    "amdefine": ">=0.1.0",
+    "socket.io": "~1.3.6"
+  },
+  "devDependencies": {
+    "mocha": "~2.2.5"
+  },
+  "scripts": {
+    "test": "mocha",
+    "start": "node mire.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://echristian@git.barrel.zone/mire/source.git"
+  },
+  "author": "Eric Christian, Barrel Zone",
+  "license": "Not OSS"
+}

@@ -1,0 +1,36 @@
+#!/bin/bash
+
+case "$1" in
+    start)
+        if [ "0" = `screen -ls | grep mire | wc -l` ]; then
+            echo "Starting..."
+            screen -dmS mire npm start
+        else
+            echo "Mire is already running.";
+        fi
+        ;;
+    stop)
+        echo "Stopping..."
+        screen -x mire -X stuff "^C"
+        ;;
+    status)
+        if [ "0" = `screen -ls | grep mire | wc -l` ]; then
+            echo "Mire is not running.";
+        else
+            echo "Mire is running.";
+        fi
+        ;;
+    reload)
+        $0 stop
+        $0 start
+        ;;
+    log)
+        screen -r mire
+        ;;
+    config)
+        node ./make-config.js
+        ;;
+    *)
+        echo "Usage: $0 {start | stop | status | reload | log | config}"
+        ;;
+esac
