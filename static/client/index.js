@@ -9,7 +9,6 @@ requirejs.config({
     "shared": "shared",
     "socket.io": "../socket.io/socket.io"
   },
-  },
   "urlArgs": "bust=" + (new Date()).getTime()
 });
 

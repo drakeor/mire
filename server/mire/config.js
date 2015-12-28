@@ -17,7 +17,7 @@ define(function (require, exports, module) {
     options = options || { };
     this.options = options;
     this.hostname = "0.0.0.0";
-    this.port = 5345;
+    this.port = 8173;
     this.events = events;
   }
 
