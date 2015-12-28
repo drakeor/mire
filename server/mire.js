@@ -7,7 +7,8 @@ define(function (require, exports, module) {
 
   var http = require('http'),
       Socket = require('socket.io'),
-      Datastore = require('nedb');
+      DBService = require('./mire/services/dbservice.js'),
+      DBO = require('./mire/dbo.js');
 
   /**
    * Expose Mire
@@ -27,29 +28,12 @@ define(function (require, exports, module) {
     this.connectedSockets = {};
     this.clients = {};
     this.io = {};
-    this.config_db = {
-      dbo: {},
-      numConnections: 0
-    };
-  }
-
-  Mire.prototype.initConfigDB = function (db) {
-    // Initialize the DB.
-    db.dbo = new Datastore({ filename: '../db/config.db', autoload: true });
-
-    // Check to see if numConnections exists:
-    db.dbo.findOne({ variable: 'numConnections' }, function (err, data) {
-      if (Object.size(data) == 0) {
-        // We should initialize this value.
-        db.dbo.insert({variable: 'numConnections', value: 0});
-      } else {
-        db.numConnections = data.value;
-      }
-    });
+    this.dbService = new DBService(this);
+    this.config_db = {};
   }
 
   Mire.prototype.getMOTD = function () {
-    return this.message;
+    return this.config_db.motd.get();
   };
 
   Mire.prototype.startServer = function () {
@@ -65,8 +49,14 @@ define(function (require, exports, module) {
     // Setup the callback for the server listen.
     this.events.addEventListener('config_read', this.listen, this);
 
-    // Let's initialize the config DBO.
-    this.initConfigDB(this.config_db);
+    // Let's initialize the DB Service.
+    this.dbService.initService();
+
+    // Let's create a config dbo
+    this.config_db.numConnections = new DBO.Config(this, "numConnections", 0);
+    this.config_db.motd = new DBO.Config(this, "motd", "Inside NODE!");
+
+    this.config_db.motd.set("We have now served: " + this.config_db.numConnections.get() + " people!");
 
     // Setup the http server.
     var resHandler = (function (req, res) {
@@ -93,10 +83,10 @@ define(function (require, exports, module) {
       this.connectedSockets[socket.id] = socket;
       this.clients[socket.id] = {"username": "", loggedIn: false};
 
-      this.config_db.numConnections++;
-      this.config_db.dbo.update({variable: 'numConnections'}, {$set: {value: this.config_db.numConnections}}, {});
+      this.config_db.numConnections.set(this.config_db.numConnections.get() + 1);
+      this.config_db.motd.set("We have now served: " + this.config_db.numConnections.get() + " people!");
 
-      console.log("User Connected. [Connection #" + this.config_db.numConnections + "]");
+      console.log("User Connected. [Connection #" + this.config_db.numConnections.get() + "]");
 
       socket.on('disconnect', (function (data) {
         console.log("User Disconnected.");
