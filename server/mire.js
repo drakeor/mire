@@ -9,8 +9,9 @@ define(function (require, exports, module) {
       Socket = require('socket.io'),
       DBService = require('./mire/services/dbservice.js'),
       DBO = require('./mire/dbo.js'),
-      Whirlpool = require('../shared/whirlpool.js');
-
+      Whirlpool = require('../shared/whirlpool.js'),
+	  //Player = require('./mire/players/player.js');
+	  
   /**
    * Expose Mire
    */
@@ -75,6 +76,7 @@ define(function (require, exports, module) {
 
     // Read the config file.
     this.config.readConfigFile(this.config.readConfigCallback);
+	
   };
 
   Mire.prototype.listen = function(args) {
@@ -85,8 +87,9 @@ define(function (require, exports, module) {
   Mire.prototype.setupSocket = function () {
     this.io.on('connection', (function (socket) {
       this.connectedSockets[socket.id] = socket;
-      this.clients[socket.id] = {"username": "", loggedIn: false};
-
+      this.clients[socket.id] = {username: "", loggedIn: false};
+	  //this.clients[socket.id] = undefined;
+	  
       this.config_db.numConnections.set(this.config_db.numConnections.get() + 1);
       this.config_db.motd.set("We have now served: " + this.config_db.numConnections.get() + " people!");
 
@@ -114,6 +117,11 @@ define(function (require, exports, module) {
 
         this.clients[socket.id].username = data.user;
         this.clients[socket.id].loggedIn = true;
+		
+		// TODO: ADD LOGIN CODE HERE BEFORE DOING THIS
+		//this.clients[socket.id] = new Player();
+		//this.clients[socket.id].loadPlayer(data.user)
+		
         for (var sockID in this.connectedSockets) {
           if (this.connectedSockets[sockID] === undefined) {
             continue;
@@ -126,17 +134,65 @@ define(function (require, exports, module) {
       }).bind(this));
 
       socket.on('msg', (function (data) {
+		  
+		// Check for commands!
+		var commandThing = data.msg.charAt(0);
+		if(commandThing == '/') {
+			var pieces = data.msg.split(" ");
+			var command = pieces[0];
+			
+			// The fabled me command!
+			if(command == "/me") {
+				var tMessage = data.user + " " + data.msg.substring(4);
+				console.log(tMessage);
+				for (var sockID in this.connectedSockets) {
+				  if (this.connectedSockets[sockID] === undefined) {
+					continue;
+				  }
+
+				  if (this.clients[sockID].loggedIn) {
+					this.connectedSockets[sockID].emit('msg', {user: "", msg: tMessage});
+				  }
+				}
+			}
+			
+			// For the sorry sad SOBs that need "help"
+			if(command == "/help") {
+				socket.emit('msg', {user: "SERVER", msg: "Get lost. Commands are /me and /listusers"});
+			}
+			
+			// Lists all of the player
+			if(command == "/listusers") {
+				var rawr = "";
+				// Gather
+				for (var sockID in this.connectedSockets) {
+				  if (this.connectedSockets[sockID] === undefined) {
+					continue;
+				  }
+
+				  if (this.clients[sockID].loggedIn) {
+					  rawr = rawr + this.clients[sockID].username + ", ";
+				  }
+				}
+				// Broadcast
+				socket.emit('msg', {user: "Server", msg: rawr});
+			}
+		
+		// Otherwise treat it like a chat message
+		} else {
         console.log("[" + data.user + "]: " + data.msg);
 
-        for (var sockID in this.connectedSockets) {
-          if (this.connectedSockets[sockID] === undefined) {
-            continue;
-          }
+			for (var sockID in this.connectedSockets) {
+			  if (this.connectedSockets[sockID] === undefined) {
+				continue;
+			  }
 
-          if (this.clients[sockID].loggedIn) {
-            this.connectedSockets[sockID].emit('msg', {user: this.clients[socket.id].username, msg: data.msg});
-          }
-        }
+			  if (this.clients[sockID].loggedIn) {
+				this.connectedSockets[sockID].emit('msg', {user: this.clients[socket.id].username, msg: data.msg});
+			  }
+			}
+		}
+		
       }).bind(this));
 
     }).bind(this));
