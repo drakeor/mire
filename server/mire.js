@@ -157,10 +157,28 @@ define(function (require, exports, module) {
 			}
 			
 			// For the sorry sad SOBs that need "help"
-			if(command == "/") {
-				
+			if(command == "/help") {
+				socket.emit('msg', {user: "SERVER", msg: "Get lost. Commands are /me and /listusers"});
 			}
 			
+			// Lists all of the player
+			if(command == "/listusers") {
+				var rawr = "";
+				// Gather
+				for (var sockID in this.connectedSockets) {
+				  if (this.connectedSockets[sockID] === undefined) {
+					continue;
+				  }
+
+				  if (this.clients[sockID].loggedIn) {
+					  rawr = rawr + this.clients[sockID].username + ", ";
+				  }
+				}
+				// Broadcast
+				socket.emit('msg', {user: "Server", msg: rawr});
+			}
+		
+		// Otherwise treat it like a chat message
 		} else {
         console.log("[" + data.user + "]: " + data.msg);
 
