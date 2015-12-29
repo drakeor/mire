@@ -43,7 +43,7 @@ define(function(require, exports, module) {
   });
 
   $(function() {
-
+  $("#m").focus();
   console.log(Whirlpool.init().add("asdf").finalize());
 
 	// Login to the server
@@ -52,11 +52,13 @@ define(function(require, exports, module) {
 
 	// Register a function to handle the chat
 	$('form').submit(function(){
-		var temp_data = {};
-		temp_data.user = person;
-		temp_data.msg = $('#m').val();
-		socket.emit('msg', temp_data);
-		$('#m').val('');
+    if ($('#m').val() != '') {
+  		var temp_data = {};
+  		temp_data.user = person;
+  		temp_data.msg = $('#m').val();
+  		socket.emit('msg', temp_data);
+  		$('#m').val('');
+    }
 		return false;
 	  });
 
