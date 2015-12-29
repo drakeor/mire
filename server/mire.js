@@ -10,7 +10,7 @@ define(function (require, exports, module) {
       DBService = require('./mire/services/dbservice.js'),
       DBO = require('./mire/dbo.js'),
       Whirlpool = require('../shared/whirlpool.js'),
-	  //Player = require('./mire/players/player.js');
+	  User = require('./mire/players/user.js');
 	  
   /**
    * Expose Mire
@@ -86,9 +86,10 @@ define(function (require, exports, module) {
 
   Mire.prototype.setupSocket = function () {
     this.io.on('connection', (function (socket) {
+		
       this.connectedSockets[socket.id] = socket;
-      this.clients[socket.id] = {username: "", loggedIn: false};
-	  //this.clients[socket.id] = undefined;
+      // this.clients[socket.id] = {username: "", loggedIn: false};
+	  this.clients[socket.id] = undefined;
 	  
       this.config_db.numConnections.set(this.config_db.numConnections.get() + 1);
       this.config_db.motd.set("We have now served: " + this.config_db.numConnections.get() + " people!");
@@ -102,8 +103,13 @@ define(function (require, exports, module) {
             continue;
           }
 
-          if (this.clients[sockID].loggedIn) {
-            this.connectedSockets[sockID].emit('logged-out', {user: this.clients[socket.id].username});
+          if (this.clients[sockID] !== undefined) {
+			if (this.clients[socket.id] !== undefined) {
+				this.connectedSockets[sockID].emit('logged-out', {user: this.clients[socket.id].getUsername()});
+			} else {
+				console.log("ERROR: Socket is already deleted. Can't send actual username.");
+				debugger;
+			}
           }
         }
 
@@ -115,20 +121,20 @@ define(function (require, exports, module) {
       socket.on('login', (function (data) {
         console.log("User [" + data.user + "] Logged In.");
 
-        this.clients[socket.id].username = data.user;
-        this.clients[socket.id].loggedIn = true;
+        //this.clients[socket.id].username = data.user;
+        //this.clients[socket.id].loggedIn = true;
 		
 		// TODO: ADD LOGIN CODE HERE BEFORE DOING THIS
-		//this.clients[socket.id] = new Player();
-		//this.clients[socket.id].loadPlayer(data.user)
+		this.clients[socket.id] = new User();
+		this.clients[socket.id].loginUser(data.user)
 		
         for (var sockID in this.connectedSockets) {
           if (this.connectedSockets[sockID] === undefined) {
             continue;
           }
 
-          if (this.clients[sockID].loggedIn) {
-            this.connectedSockets[sockID].emit('logged-in', {user: this.clients[socket.id].username});
+          if (this.clients[sockID] !== undefined) {
+            this.connectedSockets[sockID].emit('logged-in', {user: this.clients[socket.id].getUsername()});
           }
         }
       }).bind(this));
@@ -150,7 +156,7 @@ define(function (require, exports, module) {
 					continue;
 				  }
 
-				  if (this.clients[sockID].loggedIn) {
+				  if (this.clients[sockID] !== undefined) {
 					this.connectedSockets[sockID].emit('msg', {user: "", msg: tMessage});
 				  }
 				}
@@ -170,8 +176,8 @@ define(function (require, exports, module) {
 					continue;
 				  }
 
-				  if (this.clients[sockID].loggedIn) {
-					  rawr = rawr + this.clients[sockID].username + ", ";
+				  if (this.clients[sockID] !== undefined) {
+					  rawr = rawr + this.clients[sockID].getUsername() + ", ";
 				  }
 				}
 				// Broadcast
@@ -187,8 +193,8 @@ define(function (require, exports, module) {
 				continue;
 			  }
 
-			  if (this.clients[sockID].loggedIn) {
-				this.connectedSockets[sockID].emit('msg', {user: this.clients[socket.id].username, msg: data.msg});
+			  if (this.clients[sockID] !== undefined) {
+				this.connectedSockets[sockID].emit('msg', {user: this.clients[socket.id].getUsername(), msg: data.msg});
 			  }
 			}
 		}
