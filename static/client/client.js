@@ -43,9 +43,7 @@ define(function(require, exports, module) {
   });
 
   $(function() {
-    // Connect to the server
-	socket.emit('connect', {});
-  
+
   console.log(Whirlpool.init().add("asdf").finalize());
 
 	// Login to the server
