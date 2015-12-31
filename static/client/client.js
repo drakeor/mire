@@ -52,6 +52,8 @@ define(function(require, exports, module) {
       $('#user').val('');
       $('#pass').val('');
 
+      $('#m').focus();
+
       return true; // Good Transition
     },
     add_msg: function (msg) {
@@ -149,7 +151,6 @@ define(function(require, exports, module) {
 
   $(function() {
     me.fsm.pushEvent("dom_ready");
-    $("#m").focus();
     console.log(Whirlpool.init().add("asdf").finalize());
 
   	// Register a function to handle the chat
@@ -160,6 +161,20 @@ define(function(require, exports, module) {
       }
   		return false;
 	  });
+
+    $('#user').keyup(function (e){
+      if (e.keyCode == 13) {
+        $('#pass').focus();
+      }
+    });
+
+    $('#pass').keyup(function (e){
+      if (e.keyCode == 13) {
+        if ($('#user').val() != '' && $('#pass').val() != '') {
+          me.doLogin();
+        }
+      }
+    });
 
     $('#login-submit').click(function () {
       if ($('#user').val() != '' && $('#pass').val() != '') {
