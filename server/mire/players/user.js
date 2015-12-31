@@ -7,16 +7,18 @@ define(function (require, exports, module) {
 
   // Variables
   exports = module.exports = User;
-  
+
   // Constructor
   function User(serverRef) {
-		this.serverRef = serverRef;
+		this.server = serverRef;
+    this.db = this.server.dbService.db.users;
 		this.data = {};
 		this.data.username = "null";
+    this.data.password = "null";
 		this.data.email = "null@null.com";
 		this.data.characters = {};
 		this.data.numConnections = 0;
-		
+
 		console.log("User was initialized!");
   }
 
@@ -24,34 +26,52 @@ define(function (require, exports, module) {
   User.prototype.testFunction = function() {
 	  console.log("Allo there!");
   };
-  
+
   // Registration function
-  // Returns true if succeeded
-  // Returns false if failed
-  User.prototype.newUser = function(username, passwd, email) {
-	  this.data.username = username;
-	  //this.data.passwd = passwd;
-	  this.data.email = email;
-	  // Registers the user in the database
-	  return true;
+  // Returns a promise
+  User.prototype.newUser = function(username, passwd) {
+    return new Promise(
+      (function (resolve, reject){
+        this.db.findOne({ username: username }, (function (err, data) {
+          if (Object.size(data) == 0) {
+            // This user does not exist, so we create one.
+        	  this.data.username = username;
+        	  this.data.password = passwd;
+
+        	  // Registers the user in the database
+            this.db.insert(this.data);
+            resolve(true); // we have created a new user
+          } else {
+            resolve(false); // User existed.
+          }
+        }).bind(this));
+      }).bind(this)
+    );
   }
-  
-  // Returns false if the player load failed.
-  // Returns true if login succeeded
+
+  // Returns a promise.
   User.prototype.loginUser = function(username, passwd) {
-		// Attempt login
-		
-		// Login succeeded!
-		this.data.username = username;
-		console.log("Loaded player " + username);
-		return true;
+		return new Promise(
+      (function (resolve, reject) {
+        this.db.findOne({ username: username, password: passwd }, (function (err, data) {
+          if (Object.size(data) == 0) {
+            // This user does not exist.
+            resolve(false);
+          } else {
+            this.data = data;
+            console.log("Loaded player " + username);
+            resolve(true);
+          }
+        }).bind(this));
+      }).bind(this)
+    );
   }
-  
+
   // Get username
   User.prototype.getUsername = function() {
 	  return this.data.username;
   }
-  
+
   // Get email
   User.prototype.getEmail = function() {
 	  return this.data.email;

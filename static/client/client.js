@@ -25,7 +25,7 @@ define(function(require, exports, module) {
 
     	// Login to the server
     	this.userName = prompt("[TEMPORARY] Please enter your username", "Guest" + Math.floor((Math.random() * 10) + 1));
-    	this.socket.emit('login', {user:this.userName});
+    	this.socket.emit('login', {user:this.userName, pass:'lol'});
     },
     disconnected: function () {
       this.loggedIn = false;
@@ -35,6 +35,10 @@ define(function(require, exports, module) {
     },
     login_bad: function () {
       alert("Oops! That didn't work!");
+
+    	// Login to the server
+    	this.userName = prompt("[TEMPORARY] Please enter your username", "Guest" + Math.floor((Math.random() * 10) + 1));
+    	this.socket.emit('login', {user:this.userName, pass:'lol'});
     },
     login_good: function () {
       console.log("Client Logged In.");
