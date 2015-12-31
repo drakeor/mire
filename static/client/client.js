@@ -16,6 +16,8 @@ define(function(require, exports, module) {
     connected: false,
     loggedIn: false,
     userName: "",
+    previousMsg: '',
+    previousColor: '',
     fsm: new StateMachine(),
     connected: function () {
       this.loggedIn = false;
@@ -23,29 +25,67 @@ define(function(require, exports, module) {
 
       this.add_msg("Connected to Server");
 
-    	// Login to the server
-    	this.userName = prompt("[TEMPORARY] Please enter your username", "Guest" + Math.floor((Math.random() * 10) + 1));
-    	this.socket.emit('login', {user:this.userName, pass:'lol'});
+      this.show_login();
+
+      return true; // Good Transition
     },
     disconnected: function () {
       this.loggedIn = false;
       this.connected = false;
 
       this.add_msg("Disconnected from Server");
+      this.hide_login();
+
+      return true; // Good Transition
     },
     login_bad: function () {
-      alert("Oops! That didn't work!");
+      $("#login-msg").text("The password you gave is incorrect. Please try again.");
+      $("#login-msg").css('color', '#ff0000');
 
-    	// Login to the server
-    	this.userName = prompt("[TEMPORARY] Please enter your username", "Guest" + Math.floor((Math.random() * 10) + 1));
-    	this.socket.emit('login', {user:this.userName, pass:'lol'});
+      return true; // Good Transition
     },
     login_good: function () {
       console.log("Client Logged In.");
+      this.hide_login();
+
+      // Clear the fields
+      $('#user').val('');
+      $('#pass').val('');
+
+      return true; // Good Transition
     },
     add_msg: function (msg) {
     	$('#messages').append($('<li>').text(msg));
       $('#wrapper').scrollTop($('#wrapper').prop('scrollHeight'));
+    },
+    show_login: function () {
+      if (this.previousMsg == '')
+        this.previousMsg = $("#login-msg").text();
+
+      if (this.previousColor == '')
+        this.previousColor = $("#login-msg").css('color');
+
+      $("#login-msg").text(this.previousMsg);
+      $("#login-msg").css('color', this.previousColor);
+
+      $("#login-box").show();
+      $("#fader").show();
+    },
+    hide_login: function () {
+      $("#login-box").hide();
+      $("#fader").hide();
+    },
+    doLogin: function () {
+      this.userName = $('#user').val();
+      var pass = $('#pass').val();
+
+      this.socket.emit('login', {user: this.userName, pass: pass});
+    },
+    doRegister: function () {
+      this.userName = $('#user').val();
+      var pass = $('#pass').val();
+
+      this.socket.emit('register', {user: this.userName, pass: pass});
     }
   };
 
@@ -90,6 +130,10 @@ define(function(require, exports, module) {
       me.add_msg(data.user + ": " + data.msg);
   });
 
+  me.socket.on('login-good', function (data) {
+      me.fsm.pushEvent("login_good");
+  });
+
   me.socket.on('logged-in', function (data) {
       if (!me.loggedIn && data.user == me.userName)
         me.fsm.pushEvent("login_good");
@@ -116,6 +160,18 @@ define(function(require, exports, module) {
       }
   		return false;
 	  });
+
+    $('#login-submit').click(function () {
+      if ($('#user').val() != '' && $('#pass').val() != '') {
+        me.doLogin();
+      }
+    });
+
+    $('#register-submit').click(function () {
+      if ($('#user').val() != '' && $('#pass').val() != '') {
+        me.doRegister();
+      }
+    });
 
   });
 
