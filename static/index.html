@@ -5,24 +5,45 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font: 1em 'Anonymous Pro' !important; background-color: #000; color: #00ee00;}
-  form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-  form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; background-color: #0A0A0A; color: #00ee00; font-size: 1em; font-family: 'Anonymous Pro'; outline: none; }
-  form input:focus {outline: none;}
-  form button { width: 9%; background: #0E0E0E; border: none; padding: 10px; color: #fff; font-size: 1em; font-family: 'Anonymous Pro';}
+  #mf { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+  #m { border: 0; padding: 10px; width: 90%; margin-right: .5%; background-color: #0A0A0A; color: #00ee00; font-size: 1em; font-family: 'Anonymous Pro'; outline: none; }
+  #m:focus {outline: none;}
+  input.field { margin-bottom: 16px; border: 1px solid #00ee00; padding: 10px; width: 100%; margin-right: .5%; background-color: #0A0A0A;
+    color: #00ee00; font-size: 1em; font-family: 'Anonymous Pro'; outline: none; }
+  button { background: #222222; border: none; padding: 10px 30px; color: #fff; font-size: 1em; font-family: 'Anonymous Pro';}
+  #mf button { width: 9%; background: #0E0E0E; border: none; padding: 10px; color: #fff; font-size: 1em; font-family: 'Anonymous Pro';}
+  button:hover, #mf button:hover { background:#333333; cursor:pointer; }
   #messages { list-style-type: none; margin: 0; padding: 0; word-wrap: break-word; }
   #messages li { padding: 5px 10px; }
   #messages li:nth-child(odd) { background: #0A0A0A; }
   #wrapper { overflow-y: hidden; height: calc(100% - 40px); }
+  #login-box { width: 600px; height: 270px; position: absolute; top: 0; left: 0; right: 0; bottom: 0; margin: auto; background: #0E0E0E;  border: 1px solid #004700; padding: 10px; display:none; }
+  #fader { width: 100%; height: 100%; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.75); display:none; }
+  ::-webkit-input-placeholder { font-size: 0.75em; color: #008800; }
+  :-moz-placeholder { /* Firefox 18- */ font-size: 0.75em; color: #008800; }
+  ::-moz-placeholder {  /* Firefox 19+ */ font-size: 0.75em; color: #008800; }
+  :-ms-input-placeholder { font-size: 0.75em; color: #008800; }
+  h2 { text-align: center;  margin-top: 20px; margin-bottom: 20px;}
+  #login-msg { font-size: 0.8em;  display: block;  margin-bottom: 20px; text-align: center; }
 </style>
 <link rel="stylesheet" type="text/css" href="/css/style.css">
 <link href='https://fonts.googleapis.com/css?family=Anonymous+Pro' rel='stylesheet' type='text/css'>
 <script data-main="client/index" src="/client/require.js"></script>
 </head>
 <body>
+  <div id="fader"></div>
+  <div id="login-box"><h2>Please Login</h2>
+    <span id="login-msg">Please enter your user credentials to login or to register a new account.</span>
+  	<input type="text" id="user" class="field" placeholder="Please enter your username&hellip;"><br>
+  	<input type="password" id="pass" class="field" placeholder="Please enter your password&hellip;"><br>
+
+    <button id="login-submit">Login</button>
+    <button id="register-submit">Register</button>
+  </div>
   <div id="wrapper">
     <ul id="messages"></ul>
   </div>
-    <form action="">
+    <form id="mf" action="">
       <input id="m" autocomplete="off" /><button>Send</button>
     </form>
 </body>
