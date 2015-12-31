@@ -13,7 +13,7 @@ define(function(require, exports, module) {
     // Constructor
     function User(serverRef) {
         this.server = serverRef;
-        this.db = this.server.dbService.db.users;
+        this.db = this.server.dbManager.db.users;
         this.data = {};
         this.data.username = "null";
         this.data.password = "null";

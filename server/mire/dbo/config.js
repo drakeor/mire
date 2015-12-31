@@ -17,7 +17,7 @@ define(function(require, exports, module) {
         this.value = defaultValue;
 
         this.server = serverRef;
-        this.db = this.server.dbService.db.config;
+        this.db = this.server.dbManager.db.config;
 
         this.db.findOne({
             variable: this.variable

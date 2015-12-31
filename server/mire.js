@@ -13,7 +13,7 @@ define(function(require, exports, module) {
     // Require all of our libraries
     var http = require('http'),
         Socket = require('socket.io'),
-        DBService = require('./mire/services/dbservice.js'),
+        DBManager = require('./mire/managers/dbmanager.js'),
         DBO = require('./mire/dbo.js'),
         Whirlpool = require('../shared/whirlpool.js'),
         User = require('./mire/players/user.js');
@@ -38,7 +38,7 @@ define(function(require, exports, module) {
         this.connectedSockets = {};
         this.clients = {};
         this.io = {};
-        this.dbService = new DBService(this);
+        this.dbManager = new DBManager(this);
         this.config_db = {};
     }
 
@@ -71,7 +71,7 @@ define(function(require, exports, module) {
         this.events.addEventListener('config_read', this.listen, this);
 
         // Let's initialize the DB Service.
-        this.dbService.initService();
+        this.dbManager.initService();
 
         // Let's create a config dbo
         this.config_db.numConnections = new DBO.Config(this, "numConnections", 0);

@@ -9,9 +9,9 @@ define(function(require, exports, module) {
 
     var Datastore = require('nedb');
 
-    exports = module.exports = DBService;
+    exports = module.exports = DBManager;
 
-    function DBService(serverRef) {
+    function DBManager(serverRef) {
         this.server = serverRef;
 
         // Declare the Datastores
@@ -21,7 +21,7 @@ define(function(require, exports, module) {
         };
     }
 
-    DBService.prototype.initService = function() {
+    DBManager.prototype.initService = function() {
         for (var storeName in this.db) {
             if (this.db.hasOwnProperty(storeName)) {
                 // Initialize each data store.
