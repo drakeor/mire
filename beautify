@@ -1,0 +1,5 @@
+#!/bin/bash
+find server/ \( -name "*.js" \) -exec js-beautify -r {} \;
+find shared/ \( -name "*.js" \) -exec js-beautify -r {} \;
+find static/ \( -name "*.js" \) -exec js-beautify -r {} \;
+
