@@ -4,22 +4,24 @@
 var requirejs = require('requirejs');
 
 requirejs.config({
-  baseUrl: __dirname,
-  nodeRequire: require
+    baseUrl: __dirname,
+    nodeRequire: require
 });
 
-if (typeof define !== 'function') { var define = require('amdefine')(module) }
+if (typeof define !== 'function') {
+    var define = require('amdefine')(module)
+}
 
 define(function(require, exports, module) {
 
-  var Mire = require('./server/mire.js');
+    var Mire = require('./server/mire.js');
 
-  var options = {
-    basePath: __dirname
-  }
+    var options = {
+        basePath: __dirname
+    }
 
-  var mire = new Mire (options);
+    var mire = new Mire(options);
 
-  mire.startServer();
+    mire.startServer();
 
 });
