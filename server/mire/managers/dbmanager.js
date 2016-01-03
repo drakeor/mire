@@ -17,7 +17,8 @@ define(function(require, exports, module) {
         // Declare the Datastores
         this.db = {
             config: {},
-            users: {}
+            users: {},
+			realms: {}
         };
     }
 
