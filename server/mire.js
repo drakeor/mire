@@ -16,7 +16,7 @@ define(function(require, exports, module) {
         DBManager = require('./mire/managers/dbmanager.js'),
         DBO = require('./mire/dbo.js'),
         Whirlpool = require('../shared/whirlpool.js'),
-		RealmManager = require('./mire/managers/realmmanager.js'),
+        RealmManager = require('./mire/managers/realmmanager.js'),
         User = require('./mire/players/user.js');
 
     //
@@ -40,7 +40,7 @@ define(function(require, exports, module) {
         this.clients = {};
         this.io = {};
         this.dbManager = new DBManager(this);
-		this.realmManager = {};
+        this.realmManager = {};
         this.config_db = {};
     }
 
@@ -73,10 +73,10 @@ define(function(require, exports, module) {
         this.events.addEventListener('config_read', this.listen, this);
 
         // Let's initialize the DB Service.
-		console.log("START");
+        console.log("START");
         this.dbManager.initService();
-		console.log("END");
-		
+        console.log("END");
+
         // Let's create a config dbo
         //this.config_db.numConnections = new DBO.Config(this, "numConnections", 0);
         //this.config_db.motd = new DBO.Config(this, "motd", "Inside NODE!");
@@ -98,9 +98,9 @@ define(function(require, exports, module) {
         // Read the config file.
         this.config.readConfigFile(this.config.readConfigCallback);
 
-		// Load the realms
-this.realmManager = new RealmManager(this);		
-this.realmManager.loadRealms();
+        // Load the realms
+        this.realmManager = new RealmManager(this);
+        this.realmManager.loadRealms();
     };
 
     //

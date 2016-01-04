@@ -18,7 +18,7 @@ define(function(require, exports, module) {
         this.db = {
             config: {},
             users: {},
-			realms: {}
+            realms: {}
         };
     }
 
@@ -30,7 +30,7 @@ define(function(require, exports, module) {
                     filename: './db/' + storeName + '.db',
                     autoload: true
                 });
-				console.log("Loaded datastore");
+                console.log("Loaded datastore");
             }
         }
     };

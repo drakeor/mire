@@ -13,7 +13,7 @@ define(function(require, exports, module) {
     // Constructor
     function Realm(serverRef, data) {
         this.server = serverRef;
-		// This holds the database data
+        // This holds the database data
         this.data = data;
     }
 
