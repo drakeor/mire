@@ -9,20 +9,13 @@ define(function(require, exports, module) {
 
     // Variables
     exports = module.exports = RealmManager;
-
+	var Realm = require('../players/realm.js');
+	
     // Constructor
     function RealmManager(serverRef) {
-		
-		// Server and database references
         this.server = serverRef;
         this.db = this.server.dbManager.db.realms;
-		
-		// Data reflects what's in the
-        this.data = {};
-		
-		// Realm data reflects what's in the database
         this.realms = {};
-        
     }
 
     // Test function
@@ -41,7 +34,6 @@ define(function(require, exports, module) {
 			}).bind(this),
 			// Recreate Realm1 if it does not exist
 			(function(objSize, callback) {
-				console.log(callback);
 				if(objSize == 0) {
 					console.log("realm1 does not exist! Recreating...");
 					var realmTemplate = {
@@ -61,10 +53,10 @@ define(function(require, exports, module) {
 			// Load the realms
 			(function(callback) {
 				this.db.find({}, (function (err, data) {
-					this.realms = data;
+					//this.realms = data;
 					for(var i=0; i < data.length; i++) {
-						console.log("Realm " + this.realms[i]._id + " has been loaded!");
-						this.data[i] = {};
+						this.realms[i] = new Realm(this.server, data[i]);
+						console.log("Realm " + this.realms[i].getId() + " has been loaded!");
 					}
 					console.log(data.length + " realms have been loaded!");
 					return data;
