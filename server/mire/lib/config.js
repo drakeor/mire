@@ -9,15 +9,16 @@ define(function(require, exports, module) {
 
     exports = module.exports = Config;
 
-    function Config(serverRef, variable, defaultValue) {
+    function Config(serverRef, variable, defaultValue, dbRef) {
         // Default to using strings
         defaultValue = typeof defaultValue !== 'undefined' ? defaultValue : "";
+        dbRef = typeof dbRef !== 'undefined' ? dbRef : serverRef.dbManager;
 
         this.variable = variable;
         this.value = defaultValue;
 
         this.server = serverRef;
-        this.db = this.server.dbManager.db.config;
+        this.db = dbRef.db.config;
 
         this.db.findOne({
             variable: this.variable

@@ -20,9 +20,16 @@ define(function(require, exports, module) {
             users: {},
             realms: {}
         };
+
+        this.loaded = false;
+
+        this.initService();
     }
 
     DBManager.prototype.initService = function() {
+        if (this.loaded)
+            return;
+
         for (var storeName in this.db) {
             if (this.db.hasOwnProperty(storeName)) {
                 // Initialize each data store.
@@ -34,5 +41,9 @@ define(function(require, exports, module) {
             }
         }
     };
+
+    DBManager.prototype.compact = function (key) {
+      this.db[key].persistence.compactDatafile();
+    }
 
 });

@@ -7,24 +7,23 @@ if (typeof define !== 'function') {
 
 define(function(require, exports, module) {
 
-    // Add ES6-Promise
+    // Add Polyfills
     require('es6-promise').polyfill();
+    require('../shared/polyfills.js').polyfill();
 
     // Require all of our libraries
     var http = require('http'),
         Socket = require('socket.io'),
         DBManager = require('./mire/managers/dbmanager.js'),
-        DBO = require('./mire/dbo.js'),
         Whirlpool = require('../shared/whirlpool.js'),
         RealmManager = require('./mire/managers/realmmanager.js'),
+        ConfigManager = require('./mire/managers/configmanager.js'),
         User = require('./mire/players/user.js');
 
     //
     // Expose Mire
     //
     exports = module.exports = Mire;
-    exports.Config = require('./mire/config.js');
-    exports.Events = require('../shared/events.js');
 
     //
     // Constructor
@@ -32,55 +31,30 @@ define(function(require, exports, module) {
     function Mire(options) {
         options = options || {};
         this.options = options;
-        this.message = "Inside Node!";
-        this.events = new exports.Events.Emitter();
-        this.config = new exports.Config(this.options, this.events);
+
+        // Server
         this.server = {};
         this.connectedSockets = {};
         this.clients = {};
         this.io = {};
+
+        // Managers
         this.dbManager = new DBManager(this);
-        this.realmManager = {};
-        this.config_db = {};
+        this.realmManager = new RealmManager(this);
+        this.config = new ConfigManager(this);
     }
 
     //
     // Gets the message of the day
     //
     Mire.prototype.getMOTD = function() {
-        //return this.config_db.motd.get();
+        return this.config.getMOTD();
     };
 
     //
     // This is called when the server first starts up
     //
     Mire.prototype.startServer = function() {
-
-        // Let's setup some polyfills
-        Object.size = function(obj) {
-            var size = 0,
-                key;
-            for (key in obj) {
-                if (obj.hasOwnProperty(key)) size++;
-            }
-            return size;
-        };
-
-        // Inititalise the whirlpool hash
-        console.log(Whirlpool.init().add("asdf").finalize());
-
-        // Setup the callback for the server listen.
-        this.events.addEventListener('config_read', this.listen, this);
-
-        // Let's initialize the DB Service.
-        console.log("START");
-        this.dbManager.initService();
-        console.log("END");
-
-        // Let's create a config dbo
-        //this.config_db.numConnections = new DBO.Config(this, "numConnections", 0);
-        //this.config_db.motd = new DBO.Config(this, "motd", "Inside NODE!");
-        //this.config_db.motd.set("We have now served: " + this.config_db.numConnections.get() + " people!");
 
         // Setup the http server.
         var resHandler = (function(req, res) {
@@ -95,12 +69,11 @@ define(function(require, exports, module) {
         this.io = Socket(this.server);
         this.setupSocket();
 
-        // Read the config file.
-        this.config.readConfigFile(this.config.readConfigCallback);
-
         // Load the realms
-        this.realmManager = new RealmManager(this);
         this.realmManager.loadRealms();
+
+        // Start listening
+        this.listen();
     };
 
     //
@@ -122,9 +95,7 @@ define(function(require, exports, module) {
             this.clients[socket.id] = undefined;
 
             // Keep track of the number of connections
-            //this.config_db.numConnections.set(this.config_db.numConnections.get() + 1);
-            //this.config_db.motd.set("We have now served: " + this.config_db.numConnections.get() + " people!");
-            //console.log("User Connected. [Connection #" + this.config_db.numConnections.get() + "]");
+            this.config.incNumConnections();
 
             //
             // Disconnect Event

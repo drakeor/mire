@@ -1,13 +1,11 @@
 /* jshint node: true */
 "use strict";
 
-var prompt = require('prompt'),
-    fs = require('fs'),
-    path = require('path'),
-    replaceStream = require('replacestream');
+require('./shared/polyfills.js').polyfill();
 
-var configTemplate = path.join(__dirname, 'tpl/config/default-config.tpl');
-var outputConfig = path.join(__dirname, 'config.js');
+var prompt = require('prompt'),
+    DBManager = require('./server/mire/managers/dbmanager.js'),
+    ConfigManager = require('./server/mire/managers/configmanager.js');
 
 prompt.message = '';
 prompt.delimiter = '';
@@ -22,7 +20,7 @@ var schema = {
     port: {
       description: 'Enter the port for the node server',
       required: true,
-      default: 5345
+      default: 8173
     }
   }
 };
@@ -35,12 +33,14 @@ prompt.get(schema, function (err, result) {
   if (err) {
     console.error('\n\nOK. Configuration not saved.\n');
   } else {
-    var outputFS = fs.createWriteStream(outputConfig);
+    var dbMgr = new DBManager({});
 
-    fs.createReadStream(configTemplate)
-      .pipe(replaceStream('_HOST_', result.iphost))
-      .pipe(replaceStream('_PORT_', result.port))
-      .pipe(outputFS);
+    var configMgr = new ConfigManager({}, dbMgr);
+
+    configMgr.setHost(result.iphost);
+    configMgr.setPort(result.port);
+
+    dbMgr.compact("config");
 
     console.log("\n\nConfiguration successfully written!\n");
   }
