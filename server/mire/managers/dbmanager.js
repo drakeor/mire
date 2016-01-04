@@ -42,8 +42,8 @@ define(function(require, exports, module) {
         }
     };
 
-    DBManager.prototype.compact = function (key) {
-      this.db[key].persistence.compactDatafile();
+    DBManager.prototype.compact = function(key) {
+        this.db[key].persistence.compactDatafile();
     }
 
 });

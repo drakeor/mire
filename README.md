@@ -51,13 +51,13 @@ server/
 
 world_core/                     -- This directory contains all the Core World Files.
 ├── coremanager.js
-├── entities                    -- Core Entities
+├── entity                      -- Core Entities
 ├── room                        -- Core Rooms
 └── verb                        -- Core Verbs
 
 world_custom/                   -- This directory contains all the Custom World Files.
 ├── custommanager.js
-├── entities                    -- Custom Entities
+├── entity                      -- Custom Entities
 ├── room                        -- Custom Rooms
 └── verb                        -- Custom Verbs
 </pre>

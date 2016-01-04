@@ -9,19 +9,18 @@ define(function(require, exports, module) {
 
     exports = module.exports = Polyfill;
 
-    function Polyfill() {
-    }
+    function Polyfill() {}
 
-    Polyfill.polyfill = function () {
-      // Let's setup some polyfills
-      Object.size = function(obj) {
-          var size = 0,
-              key;
-          for (key in obj) {
-              if (obj.hasOwnProperty(key)) size++;
-          }
-          return size;
-      };
+    Polyfill.polyfill = function() {
+        // Let's setup some polyfills
+        Object.size = function(obj) {
+            var size = 0,
+                key;
+            for (key in obj) {
+                if (obj.hasOwnProperty(key)) size++;
+            }
+            return size;
+        };
     };
 
 });
