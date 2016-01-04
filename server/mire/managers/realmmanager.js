@@ -13,20 +13,27 @@ define(function(require, exports, module) {
     // Constructor
     function RealmManager(serverRef) {
         this.server = serverRef;
-        this.db = this.server.dbManager.db.realms;
+        this.db = this.server.dbManager.db.users;
         this.data = {};
         this.realms = {};
-        console.log("RealmManager was initialized!");
+        
     }
 
     // Test function
     RealmManager.prototype.loadRealms = function() {
-		
+		console.log(Object.getOwnPropertyNames(this.server.dbManager.db.users));
+		console.log("RealmManager was initialized!");
 		// Load our realms from the database. REALM1 should ALWAYS exist!
-		db.find({}, function (err, data) {
-		  // docs is an array containing documents Mars, Earth, Jupiter
-		  // If no document is found, docs is equal to []
-		});
+		/*this.db.find({}, function (err, data) {
+			if(data.length == 0) {
+				throw new Error('ERROR 0x1: The RealmManager MUST include at least one realm under realms.db to function properly!');
+			}
+			this.realms = data;
+			for(var i=0; i < data.length; i++) {
+				console.log("Realm " + this.realms[i]._id + " has been loaded!");
+			}
+			console.log(data.length + " realms have been loaded!");
+		});*/
 
 		
     };

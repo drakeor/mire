@@ -7,6 +7,6 @@ if (typeof define !== 'function') {
 
 define(function(require, exports, module) {
 
-    exports.Config = require('./dbo/config.js');
+    //exports.Config = require('./dbo/config.js');
 
 });

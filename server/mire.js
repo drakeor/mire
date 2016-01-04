@@ -16,6 +16,7 @@ define(function(require, exports, module) {
         DBManager = require('./mire/managers/dbmanager.js'),
         DBO = require('./mire/dbo.js'),
         Whirlpool = require('../shared/whirlpool.js'),
+		RealmManager = require('./mire/managers/realmmanager.js'),
         User = require('./mire/players/user.js');
 
     //
@@ -39,6 +40,7 @@ define(function(require, exports, module) {
         this.clients = {};
         this.io = {};
         this.dbManager = new DBManager(this);
+		this.realmManager = new RealmManager(this);
         this.config_db = {};
     }
 
@@ -46,7 +48,7 @@ define(function(require, exports, module) {
     // Gets the message of the day
     //
     Mire.prototype.getMOTD = function() {
-        return this.config_db.motd.get();
+        //return this.config_db.motd.get();
     };
 
     //
@@ -71,12 +73,14 @@ define(function(require, exports, module) {
         this.events.addEventListener('config_read', this.listen, this);
 
         // Let's initialize the DB Service.
+		console.log("START");
         this.dbManager.initService();
-
+		console.log("END");
+		
         // Let's create a config dbo
-        this.config_db.numConnections = new DBO.Config(this, "numConnections", 0);
-        this.config_db.motd = new DBO.Config(this, "motd", "Inside NODE!");
-        this.config_db.motd.set("We have now served: " + this.config_db.numConnections.get() + " people!");
+        //this.config_db.numConnections = new DBO.Config(this, "numConnections", 0);
+        //this.config_db.motd = new DBO.Config(this, "motd", "Inside NODE!");
+        //this.config_db.motd.set("We have now served: " + this.config_db.numConnections.get() + " people!");
 
         // Setup the http server.
         var resHandler = (function(req, res) {
@@ -94,6 +98,8 @@ define(function(require, exports, module) {
         // Read the config file.
         this.config.readConfigFile(this.config.readConfigCallback);
 
+		// Load the realms
+		this.realmManager.loadRealms();
     };
 
     //
@@ -115,9 +121,9 @@ define(function(require, exports, module) {
             this.clients[socket.id] = undefined;
 
             // Keep track of the number of connections
-            this.config_db.numConnections.set(this.config_db.numConnections.get() + 1);
-            this.config_db.motd.set("We have now served: " + this.config_db.numConnections.get() + " people!");
-            console.log("User Connected. [Connection #" + this.config_db.numConnections.get() + "]");
+            //this.config_db.numConnections.set(this.config_db.numConnections.get() + 1);
+            //this.config_db.motd.set("We have now served: " + this.config_db.numConnections.get() + " people!");
+            //console.log("User Connected. [Connection #" + this.config_db.numConnections.get() + "]");
 
             //
             // Disconnect Event

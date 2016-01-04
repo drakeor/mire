@@ -30,6 +30,7 @@ define(function(require, exports, module) {
                     filename: './db/' + storeName + '.db',
                     autoload: true
                 });
+				console.log("Loaded datastore");
             }
         }
     };
