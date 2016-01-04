@@ -18,7 +18,7 @@ define(function(require, exports, module) {
         Whirlpool = require('../shared/whirlpool.js'),
         RealmManager = require('./mire/managers/realmmanager.js'),
         ConfigManager = require('./mire/managers/configmanager.js'),
-        User = require('./mire/players/user.js');
+        DBO = require('./mire/dbo.js');
 
     //
     // Expose Mire
@@ -132,7 +132,7 @@ define(function(require, exports, module) {
                 console.log("User [" + data.user + "] Logged In.");
 
                 // TODO: User needs a logged-in field
-                this.clients[socket.id] = new User(this);
+                this.clients[socket.id] = new DBO.User(this);
 
                 // This is a login query promise.
                 this.clients[socket.id].loginUser(data.user, data.pass)

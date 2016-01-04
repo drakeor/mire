@@ -9,7 +9,7 @@ define(function(require, exports, module) {
 
     // Variables
     exports = module.exports = RealmManager;
-    var Realm = require('../players/realm.js');
+    var Realm = require('../lib/realm.js');
 
     // Constructor
     function RealmManager(serverRef) {
