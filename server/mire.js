@@ -40,7 +40,7 @@ define(function(require, exports, module) {
         this.clients = {};
         this.io = {};
         this.dbManager = new DBManager(this);
-		this.realmManager = new RealmManager(this);
+		this.realmManager = {};
         this.config_db = {};
     }
 
@@ -99,7 +99,8 @@ define(function(require, exports, module) {
         this.config.readConfigFile(this.config.readConfigCallback);
 
 		// Load the realms
-		this.realmManager.loadRealms();
+this.realmManager = new RealmManager(this);		
+this.realmManager.loadRealms();
     };
 
     //
