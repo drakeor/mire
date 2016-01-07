@@ -42,6 +42,9 @@ define(function(require, exports, module) {
         this.socketMgr = new SocketManager(this);
         this.userMgr = new UserManager(this);
         this.lexerMgr = new LexerManager(this);
+
+        // Start the server after we are done reading config data.
+        this.config.events.addEventListener('config-done', this.startServer, this);
     }
 
     //

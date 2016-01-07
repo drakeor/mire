@@ -32,6 +32,7 @@ define(function(require, exports, module) {
             } else {
                 this.value = data.value;
             }
+            this.server.config.i--; // Decrease the uninitialized number.
         }).bind(this));
     }
 

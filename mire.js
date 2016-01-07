@@ -22,6 +22,4 @@ define(function(require, exports, module) {
 
     var mire = new Mire(options);
 
-    mire.startServer();
-
 });

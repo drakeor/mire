@@ -9,16 +9,26 @@ define(function(require, exports, module) {
 
     exports = module.exports = ConfigManager;
 
-    var DBO = require('../dbo.js');
+    var DBO = require('../dbo.js'),
+        Events = require('../../../shared/events.js');
 
     function ConfigManager(serverRef, dbRef) {
         this.server = serverRef;
+        this.events = new Events.Emitter();
 
         this.host = new DBO.Config(this.server, "host", "127.0.0.1", dbRef);
         this.port = new DBO.Config(this.server, "port", 8173, dbRef);
         this.numConnections = new DBO.Config(this.server, "numConnections", 0, dbRef);
         this.motd = new DBO.Config(this.server, "motd", "Inside NODE!", dbRef);
+
+        this.i = 4;
+        this.waitForComplete();
     }
+
+    ConfigManager.prototype.waitForComplete = function () {
+        if (this.i != 0) setTimeout(this.waitForComplete.bind(this), 100);
+        else this.events.emit('config-done', {});
+    };
 
     ConfigManager.prototype.getHost = function() {
         return this.host.get();
