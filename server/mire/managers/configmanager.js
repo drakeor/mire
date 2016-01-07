@@ -25,7 +25,7 @@ define(function(require, exports, module) {
         this.waitForComplete();
     }
 
-    ConfigManager.prototype.waitForComplete = function () {
+    ConfigManager.prototype.waitForComplete = function() {
         if (this.i != 0) setTimeout(this.waitForComplete.bind(this), 100);
         else this.events.emit('config-done', {});
     };

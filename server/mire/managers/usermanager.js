@@ -22,18 +22,20 @@ define(function(require, exports, module) {
         this.socketMgr.events.addEventListener('socket-login-pkt', this.handleLoginPacket, this);
     }
 
-    UserManager.prototype.handleDisconnect = function (args) {
+    UserManager.prototype.handleDisconnect = function(args) {
         var socket = args.socket;
         var data = args.data;
 
         if (this.users[socket.id] !== undefined) {
-            this.socketMgr.sendAll('logged-out', {user: this.users[socket.id].getUsername()});
+            this.socketMgr.sendAll('logged-out', {
+                user: this.users[socket.id].getUsername()
+            });
         }
 
         this.users[socket.id] = undefined;
     };
 
-    UserManager.prototype.handleLoginPacket = function (args) {
+    UserManager.prototype.handleLoginPacket = function(args) {
         var socket = args.socket;
         var data = args.data;
 
@@ -48,7 +50,9 @@ define(function(require, exports, module) {
                 if (loginGood) {
                     socket.emit('login-good');
 
-                    this.socketMgr.sendAll('logged-in', {user: this.users[socket.id].getUsername()});
+                    this.socketMgr.sendAll('logged-in', {
+                        user: this.users[socket.id].getUsername()
+                    });
 
                 } else {
                     // The login failed.

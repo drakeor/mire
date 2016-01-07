@@ -20,7 +20,7 @@ define(function(require, exports, module) {
         this.socketMgr.events.addEventListener('socket-msg-pkt', this.handleMessagePacket, this);
     }
 
-    LexerManager.prototype.handleMessagePacket = function (args) {
+    LexerManager.prototype.handleMessagePacket = function(args) {
         var socket = args.socket;
         var data = args.data;
 
@@ -35,7 +35,10 @@ define(function(require, exports, module) {
                 var tMessage = data.user + " " + data.msg.substring(4);
                 console.log(tMessage);
 
-                this.socketMgr.sendAll('msg', {user: "", msg: tMessage});
+                this.socketMgr.sendAll('msg', {
+                    user: "",
+                    msg: tMessage
+                });
             }
 
             // For the sorry sad SOBs that need "help"
@@ -74,7 +77,10 @@ define(function(require, exports, module) {
         } else {
             console.log("[" + data.user + "]: " + data.msg);
 
-            this.socketMgr.sendAll('msg', {user: this.userMgr.users[socket.id].getUsername(), msg: data.msg});
+            this.socketMgr.sendAll('msg', {
+                user: this.userMgr.users[socket.id].getUsername(),
+                msg: data.msg
+            });
         }
 
     };

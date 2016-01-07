@@ -23,7 +23,7 @@ define(function(require, exports, module) {
         this.events = new Events.Emitter();
     }
 
-    SocketManager.prototype.sendAll = function (event, data) {
+    SocketManager.prototype.sendAll = function(event, data) {
         for (var sockID in this.connectedSockets) {
             if (this.connectedSockets[sockID] === undefined) {
                 continue;
@@ -35,7 +35,7 @@ define(function(require, exports, module) {
     //
     // Event Callback for Connect Events
     //
-    SocketManager.prototype.onSocketConnect = function (socket) {
+    SocketManager.prototype.onSocketConnect = function(socket) {
         // Setup a few variables
         this.connectedSockets[socket.id] = socket;
 
@@ -43,15 +43,20 @@ define(function(require, exports, module) {
         this.server.config.incNumConnections();
 
         // Send the Connect Event
-        this.events.emit('client-connect', {socket: socket});
+        this.events.emit('client-connect', {
+            socket: socket
+        });
     };
 
     //
     // Event Callback for Disconnect Events
     //
-    SocketManager.prototype.onSocketDisconnect = function (socket, data) {
+    SocketManager.prototype.onSocketDisconnect = function(socket, data) {
         // Send the disconnect event
-        this.events.emit('socket-disconnect', {socket: socket, data: data});
+        this.events.emit('socket-disconnect', {
+            socket: socket,
+            data: data
+        });
 
         // Set the clients to undefined
         this.connectedSockets[socket.id] = undefined;
@@ -60,15 +65,21 @@ define(function(require, exports, module) {
     //
     // Event Callback for the Login Packet
     //
-    SocketManager.prototype.onSocketLoginPacket = function (socket, data) {
-        this.events.emit('socket-login-pkt', {socket: socket, data: data});
+    SocketManager.prototype.onSocketLoginPacket = function(socket, data) {
+        this.events.emit('socket-login-pkt', {
+            socket: socket,
+            data: data
+        });
     }
 
     //
     // Event Callback for the Message Packet
     //
-    SocketManager.prototype.onSocketMessagePacket = function (socket, data) {
-        this.events.emit('socket-msg-pkt', {socket: socket, data: data});
+    SocketManager.prototype.onSocketMessagePacket = function(socket, data) {
+        this.events.emit('socket-msg-pkt', {
+            socket: socket,
+            data: data
+        });
     }
 
     //
@@ -90,7 +101,7 @@ define(function(require, exports, module) {
         this.setupSocket();
     };
 
-    SocketManager.prototype.listen = function () {
+    SocketManager.prototype.listen = function() {
         // Start listening
         this.httpServer.listen(this.server.config.getPort(), this.server.config.getHost());
         console.log('Mire Server listening on http://' + this.server.config.getHost() + ':' + this.server.config.getPort().toString() + '/');
