@@ -9,80 +9,69 @@ define(function(require, exports, module) {
 
     exports = module.exports = LexerManager;
 
-    var DBO = require('../dbo.js');
+    var DBO = require('../dbo.js'),
+        fs = require('fs');
 
     function LexerManager(serverRef) {
         this.server = serverRef;
         this.socketMgr = this.server.socketMgr;
         this.userMgr = this.server.userMgr;
 
+        this.verbs = {};
+
         // Setup Event callbacks
         this.socketMgr.events.addEventListener('socket-msg-pkt', this.handleMessagePacket, this);
+
+        // Load the World and Alias directories
+        // First the world.
+        this.loadCoreVerbs();
+
+        // Now override them with the alias verbs.
+        this.loadAliasVerbs();
     }
+
+    LexerManager.prototype.loadCoreVerbs = function () {
+        fs.readdir('./world_core/verbs', (function (err, list) {
+            if ( !err ) {
+                list.forEach((function (file) {
+                    var verb = new (require('../../../world_core/verbs/' + file))(this.server);
+                    this.verbs[verb.getVerbName()] = verb;
+                }).bind(this));
+            }
+        }).bind(this));
+    };
+
+    LexerManager.prototype.loadAliasVerbs = function () {
+        fs.readdir('./world_alias/verbs', (function (err, list) {
+            if ( !err ) {
+                list.forEach((function (file) {
+                    var verb = new (require('../../../world_alias/verbs/' + file))(this.server);
+                    this.verbs[verb.getVerbName()] = verb;
+                }).bind(this));
+            }
+        }).bind(this));
+    };
 
     LexerManager.prototype.handleMessagePacket = function(args) {
         var socket = args.socket;
         var data = args.data;
+        var currentUser = this.userMgr.users[socket.id];
 
-        // Check for commands!
-        var commandThing = data.msg.charAt(0);
-        if (commandThing == '/') {
-            var pieces = data.msg.split(" ");
-            var command = pieces[0];
+        if (data.msg.length == 0) return;
 
-            // The fabled me command!
-            if (command == "/me") {
-                var tMessage = data.user + " " + data.msg.substring(4);
-                console.log(tMessage);
+        var messageSet = data.msg.split(" ");
+        var verbString = messageSet[0];
+        var verb = {};
 
-                this.socketMgr.sendAll('msg', {
-                    user: "",
-                    msg: tMessage
-                });
-            }
-
-            // For the sorry sad SOBs that need "help"
-            if (command == "/help") {
-                socket.emit('msg', {
-                    user: "SERVER",
-                    msg: "Get lost. Commands are /me and /listusers"
-                });
-            }
-
-            // Lists all of the player
-            if (command == "/listusers") {
-                var rawr = "";
-                // Gather
-                for (var sockID in this.socketMgr.connectedSockets) {
-                    if (this.socketMgr.connectedSockets[sockID] === undefined) {
-                        continue;
-                    }
-
-                    if (this.userMgr.users[sockID] !== undefined) {
-                        rawr = rawr + this.userMgr.users[sockID].getUsername() + ", ";
-                    }
-                }
-
-                if (rawr.length > 0)
-                    rawr = rawr.substr(0, rawr.length - 2);
-
-                // Broadcast
-                socket.emit('msg', {
-                    user: "Server",
-                    msg: rawr
-                });
-            }
-
-            // Otherwise treat it like a chat message
+        // Find a verb
+        if (!this.verbs[verbString]) {
+            verb = this.verbs["?"]; // If their verb isn't found, we'll just output a help.
         } else {
-            console.log("[" + data.user + "]: " + data.msg);
-
-            this.socketMgr.sendAll('msg', {
-                user: this.userMgr.users[socket.id].getUsername(),
-                msg: data.msg
-            });
+            verb = this.verbs[verbString];
         }
 
+        // Parse the verb.
+        verb.parseVerb(currentUser, verbString, { msg: messageSet.slice(1), args: args } );
     };
 
 });
