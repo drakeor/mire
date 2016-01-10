@@ -8,18 +8,15 @@ if (typeof define !== 'function') {
 define(function(require, exports, module) {
 
     // Variables
-    exports = module.exports = Realm;
+    exports = module.exports = Verb;
 
     // Constructor
     function Verb () {
-        this.server = serverRef;
-        // This holds the database data
-        this.data = data;
     }
 
-    // Test function
-    Realm.prototype.getId = function() {
-        return this.data._id;
+    // Parse Verb
+    Verb.prototype.parseVerb = function(user, verb, arguments) {
+        console.log(user.getUsername() + " will " + verb + arguments.join(" "));
     };
 
 });
