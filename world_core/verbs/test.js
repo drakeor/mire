@@ -31,7 +31,7 @@ define(function(require, exports, module) {
 
         if (args.msg[0] == 'newcharacter') {
             var tCharacter = new DBO.Character(this.server);
-            tCharacter.newCharacter(1, user.getUsername(), args.msg.slice(1).join(" "));
+            tCharacter.newCharacter(1, user.getUsername(), args.msg.slice(1).join(" "), args.args.socket.id);
             user.currentCharacter = tCharacter;
         } else {
 
