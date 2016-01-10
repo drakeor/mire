@@ -58,7 +58,7 @@ define(function(require, exports, module) {
         var currentUser = this.userMgr.users[socket.id];
 
         if (data.msg.length == 0) return;
-
+        
         var messageSet = data.msg.split(" ");
         var verbString = messageSet[0];
         var verb = {};

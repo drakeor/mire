@@ -57,6 +57,11 @@ define(function(require, exports, module) {
             user: "",
             msg: "? - Will print this help message."
         });
+
+        args.args.socket.emit('msg', {
+            user: "",
+            msg: "test newcharacter NAME - Will create a new character and set its name."
+        });
     };
 
 });

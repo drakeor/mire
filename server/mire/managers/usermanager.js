@@ -55,7 +55,6 @@ define(function(require, exports, module) {
                     });
 
                     // Initial Help Message
-                    debugger;
                     this.server.lexerMgr.verbs["?"].parseVerb(this.users[socket.id], '?', {msg: [], args: {socket: socket}});
 
                 } else {

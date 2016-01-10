@@ -14,14 +14,23 @@ define(function(require, exports, module) {
     // Constructor
     function Room(serverRef, data) {
         this.server = serverRef;
-        // This holds the database data
-		this.config = {};
+		
+        // Room configuration
+		this.config = {
+			id: "noid",
+			name: "untitled",
+			description: "no description",
+			world_x: 0,
+			world_y: 0,
+			scale_x: 1,
+			scale_y: 1
+		};
         this.data = data;
     }
 
     // Test function
     Room.prototype.getId = function() {
-        return this.data._id;
+        return this.config.id;
     };
 
 });
