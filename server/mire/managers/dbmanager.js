@@ -19,7 +19,8 @@ define(function(require, exports, module) {
             config: {},
             users: {},
             realms: {},
-	    rooms: {}
+			rooms: {},
+			characters: {}
         };
 
         this.loaded = false;

@@ -41,6 +41,12 @@ define(function(require, exports, module) {
                 });
             }
 
+			if (command == "/newcharacter") {
+					var tCharacter = new DBO.Character(this.server);
+					tCharacter.newCharacter(1, this.userMgr.users[socket.id].getUsername(), data.msg.substring(14));
+					this.userMgr.users[socket.id].currentCharacter = tCharacter;
+			}
+			
             // For the sorry sad SOBs that need "help"
             if (command == "/help") {
                 socket.emit('msg', {
