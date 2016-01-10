@@ -56,7 +56,7 @@ define(function(require, exports, module) {
                     //this.realms = data;
                     for (var i = 0; i < data.length; i++) {
                         this.realms[i] = new Realm(this.server, data[i]);
-						this.realms[i].loadRooms();
+                        this.realms[i].loadRooms();
                         console.log("Realm " + this.realms[i].getId() + " has been loaded!");
                     }
                     console.log(data.length + " realms have been loaded!");

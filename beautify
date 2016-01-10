@@ -2,4 +2,6 @@
 find server/ \( -name "*.js" \) -exec js-beautify -r {} \;
 find shared/ \( -name "*.js" \) -exec js-beautify -r {} \;
 find static/ \( -name "*.js" \) -exec js-beautify -r {} \;
+find world_alias/ \( -name "*.js" \) -exec js-beautify -r {} \;
+find world_core/ \( -name "*.js" \) -exec js-beautify -r {} \;
 

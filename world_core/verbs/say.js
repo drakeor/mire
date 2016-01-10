@@ -13,7 +13,7 @@ define(function(require, exports, module) {
     var Verb = require('../../server/mire/lib/verb.js');
 
     // Constructor
-    function SayVerb (serverRef) {
+    function SayVerb(serverRef) {
         this.server = serverRef;
         this.socketMgr = this.server.socketMgr;
         this.userMgr = this.server.userMgr;

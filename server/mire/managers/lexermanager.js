@@ -30,22 +30,22 @@ define(function(require, exports, module) {
         this.loadAliasVerbs();
     }
 
-    LexerManager.prototype.loadCoreVerbs = function () {
-        fs.readdir('./world_core/verbs', (function (err, list) {
-            if ( !err ) {
-                list.forEach((function (file) {
-                    var verb = new (require('../../../world_core/verbs/' + file))(this.server);
+    LexerManager.prototype.loadCoreVerbs = function() {
+        fs.readdir('./world_core/verbs', (function(err, list) {
+            if (!err) {
+                list.forEach((function(file) {
+                    var verb = new(require('../../../world_core/verbs/' + file))(this.server);
                     this.verbs[verb.getVerbName()] = verb;
                 }).bind(this));
             }
         }).bind(this));
     };
 
-    LexerManager.prototype.loadAliasVerbs = function () {
-        fs.readdir('./world_alias/verbs', (function (err, list) {
-            if ( !err ) {
-                list.forEach((function (file) {
-                    var verb = new (require('../../../world_alias/verbs/' + file))(this.server);
+    LexerManager.prototype.loadAliasVerbs = function() {
+        fs.readdir('./world_alias/verbs', (function(err, list) {
+            if (!err) {
+                list.forEach((function(file) {
+                    var verb = new(require('../../../world_alias/verbs/' + file))(this.server);
                     this.verbs[verb.getVerbName()] = verb;
                 }).bind(this));
             }
@@ -58,7 +58,7 @@ define(function(require, exports, module) {
         var currentUser = this.userMgr.users[socket.id];
 
         if (data.msg.length == 0) return;
-        
+
         var messageSet = data.msg.split(" ");
         var verbString = messageSet[0];
         var verb = {};
@@ -71,7 +71,10 @@ define(function(require, exports, module) {
         }
 
         // Parse the verb.
-        verb.parseVerb(currentUser, verbString, { msg: messageSet.slice(1), args: args } );
+        verb.parseVerb(currentUser, verbString, {
+            msg: messageSet.slice(1),
+            args: args
+        });
     };
 
 });

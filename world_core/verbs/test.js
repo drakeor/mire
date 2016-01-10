@@ -14,7 +14,7 @@ define(function(require, exports, module) {
         DBO = require('../../server/mire/dbo.js');
 
     // Constructor
-    function TestVerb (serverRef) {
+    function TestVerb(serverRef) {
         this.server = serverRef;
         this.socketMgr = this.server.socketMgr;
         this.userMgr = this.server.userMgr;
@@ -29,11 +29,10 @@ define(function(require, exports, module) {
     TestVerb.prototype.parseVerb = function(user, verb, args) {
         Verb.prototype.parseVerb.call(this, user, verb, args);
 
-        if (args.msg[0] == 'newcharacter')
-        {
-			var tCharacter = new DBO.Character(this.server);
-			tCharacter.newCharacter(1, user.getUsername(), args.msg.slice(1).join(" "));
-			user.currentCharacter = tCharacter;
+        if (args.msg[0] == 'newcharacter') {
+            var tCharacter = new DBO.Character(this.server);
+            tCharacter.newCharacter(1, user.getUsername(), args.msg.slice(1).join(" "));
+            user.currentCharacter = tCharacter;
         } else {
 
             args.args.socket.emit('msg', {

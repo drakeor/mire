@@ -11,7 +11,7 @@ define(function(require, exports, module) {
     exports = module.exports = Verb;
 
     // Constructor
-    function Verb () {
+    function Verb() {
         this.verbName = "";
     }
 
@@ -20,7 +20,7 @@ define(function(require, exports, module) {
         console.log(user.getUsername() + " will " + verb + " " + args.msg.join(" "));
     };
 
-    Verb.prototype.getVerbName = function () {
+    Verb.prototype.getVerbName = function() {
         return this.verbName;
     };
 

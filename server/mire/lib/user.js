@@ -19,11 +19,11 @@ define(function(require, exports, module) {
         this.data.password = "null";
         this.data.email = "null@null.com";
         this.data.characters = [];
-		this.data.activeCharacter = 0;
+        this.data.activeCharacter = 0;
         this.data.numConnections = 0;
-		
-		this.currentCharacter = null;
-		
+
+        this.currentCharacter = null;
+
         console.log("User was initialized!");
     }
 

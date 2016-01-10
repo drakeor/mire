@@ -55,7 +55,12 @@ define(function(require, exports, module) {
                     });
 
                     // Initial Help Message
-                    this.server.lexerMgr.verbs["?"].parseVerb(this.users[socket.id], '?', {msg: [], args: {socket: socket}});
+                    this.server.lexerMgr.verbs["?"].parseVerb(this.users[socket.id], '?', {
+                        msg: [],
+                        args: {
+                            socket: socket
+                        }
+                    });
 
                 } else {
                     // The login failed.
