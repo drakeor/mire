@@ -54,6 +54,9 @@ define(function(require, exports, module) {
                         user: this.users[socket.id].getUsername()
                     });
 
+                    // Initial Help Message
+                    this.server.lexerMgr.verbs["?"].parseVerb(this.users[socket.id], '?', {msg: [], args: {socket: socket}});
+
                 } else {
                     // The login failed.
                     //socket.emit('login-bad');

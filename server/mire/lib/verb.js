@@ -12,11 +12,16 @@ define(function(require, exports, module) {
 
     // Constructor
     function Verb () {
+        this.verbName = "";
     }
 
     // Parse Verb
-    Verb.prototype.parseVerb = function(user, verb, arguments) {
-        console.log(user.getUsername() + " will " + verb + arguments.join(" "));
+    Verb.prototype.parseVerb = function(user, verb, args) {
+        console.log(user.getUsername() + " will " + verb + " " + args.msg.join(" "));
+    };
+
+    Verb.prototype.getVerbName = function () {
+        return this.verbName;
     };
 
 });
