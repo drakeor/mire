@@ -18,7 +18,8 @@ define(function(require, exports, module) {
         this.db = {
             config: {},
             users: {},
-            realms: {}
+            realms: {},
+	    rooms: {}
         };
 
         this.loaded = false;
