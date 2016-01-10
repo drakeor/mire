@@ -61,6 +61,7 @@ define(function(require, exports, module) {
 					{},
 					(function (err, numReplaced) {
 						console.log("Setting active character... Replaced " + numReplaced + " records!");
+						callback(null, characterID);
 						
 					}).bind(this)
 				);
