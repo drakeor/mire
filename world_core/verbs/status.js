@@ -29,11 +29,10 @@ define(function(require, exports, module) {
         Verb.prototype.parseVerb.call(this, user, verb, args);
 
         var message = args.msg.join(" ");
-
+		console.log(user);
         // Send out the player status
-		if(user.activeCharacter != null) {
-			var message = "You are playing as " + user.characters[user.activeCharacter].data.name 
-				+ " in " + user.characters[user.activeCharacter].data.room + " of " + user.characters[user.activeCharacter].data.realm;
+		if(user.currentCharacter != null) {
+			var message = "You are playing as " + user.currentCharacter.data.name + " in " + user.currentCharacter.data.room + " on " + user.currentCharacter.data.realm;
 		} else {
 			var message = "You are not playing any characters.";
 		}

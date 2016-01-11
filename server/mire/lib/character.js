@@ -52,8 +52,8 @@ define(function(require, exports, module) {
 					{},
 					(function (err, numReplaced) {
 						console.log("Replaced " + numReplaced + " records! Error: " + err);
-						console.log("User ID" + this.sockID + " characters: " + this.userMgr.users[this.sockID].characters);
-						//this.userMgr.users[this.sockID].characters.push(characterID);
+						console.log("User ID" + this.sockID + " characters: " + this.userMgr.users[this.sockID].data.characters);
+						this.userMgr.users[this.sockID].data.characters.push(characterID);
 						callback(null, characterID);
 					}).bind(this)
 				);
@@ -66,7 +66,7 @@ define(function(require, exports, module) {
 					{},
 					(function (err, numReplaced) {
 						console.log("Setting active character... Replaced " + numReplaced + " records!");
-						//this.userMgr.users[this.sockID].activeCharacter = characterID;
+						this.userMgr.users[this.sockID].data.activeCharacter = characterID;
 						callback(null, characterID);
 						
 					}).bind(this)
